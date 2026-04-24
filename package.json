@@ -5,10 +5,10 @@
   "type": "module",
   "license": "MIT",
   "author": "M'Hamed El Bah <mhamed.bbh01@gmail.com>",
-  "homepage": "https://github.com/medbbh/ascii-particle-engine#readme",
+  "homepage": "https://github.com/medbbh/vizo#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/medbbh/ascii-particle-engine.git"
+    "url": "https://github.com/medbbh/vizo.git"
   },
   "keywords": ["ascii", "particles", "canvas", "react", "generative-art", "interactive"],
   "scripts": {

@@ -31,7 +31,7 @@ An interactive web tool that transforms any image into a field of ASCII characte
 ### Install & run
 
 ```bash
-git clone https://github.com/medbbh/ascii-particle-engine.git
+git clone https://github.com/medbbh/vizo.git
 cd ascii-particle-engine
 npm install
 npm run dev
