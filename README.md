@@ -2,7 +2,7 @@
 
 An interactive web tool that transforms any image into a field of ASCII characters that physically react to your mouse cursor. Built with React and a custom canvas-based particle physics engine.
 
-<video src="https://github.com/medbbh/vizo/raw/main/vizo.mp4" autoplay loop muted playsinline width="100%"></video>
+<video src="https://github.com/user-attachments/assets/bcb6f6eb-38b0-449a-b3c3-ef5701baf5a0" autoplay loop muted playsinline width="100%"></video>
 
 ---
 
