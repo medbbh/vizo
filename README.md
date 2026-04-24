@@ -2,7 +2,7 @@
 
 An interactive web tool that transforms any image into a field of ASCII characters that physically react to your mouse cursor. Built with React and a custom canvas-based particle physics engine.
 
-<video src="public/demo_image_to_ascii_tool.mp4" autoplay loop muted playsinline width="100%"></video>
+[![Demo](https://img.youtube.com/vi/grJ8Ikn3AFo/maxresdefault.jpg)](https://youtu.be/grJ8Ikn3AFo)
 
 ---
 
@@ -32,7 +32,7 @@ An interactive web tool that transforms any image into a field of ASCII characte
 
 ```bash
 git clone https://github.com/medbbh/vizo.git
-cd ascii-particle-engine
+cd vizo
 npm install
 npm run dev
 ```
