@@ -4,10 +4,15 @@ import CanvasRenderer from './components/CanvasRenderer'
 import Controls from './components/Controls'
 import ExportPanel from './components/ExportPanel'
 import ImageUploader from './components/ImageUploader'
+import WebcamToggle from './components/WebcamToggle'
 
 export default function App() {
   const imageSrc         = useEngineStore((s) => s.imageSrc)
   const imageAspectRatio = useEngineStore((s) => s.imageAspectRatio)
+  const webcamActive     = useEngineStore((s) => s.webcamActive)
+  const webcamFrozen     = useEngineStore((s) => s.webcamFrozen)
+  const webcamAspectRatio = useEngineStore((s) => s.webcamAspectRatio)
+  const setWebcamFrozen  = useEngineStore((s) => s.setWebcamFrozen)
   const reset            = useEngineStore((s) => s.reset)
   const [isMobile, setIsMobile]   = useState(() => window.innerWidth < 768)
   const [sheetOpen, setSheetOpen] = useState(false)
@@ -18,9 +23,7 @@ export default function App() {
     return () => window.removeEventListener('resize', fn)
   }, [])
 
-  // Use the image's natural aspect ratio so particles are never stretched.
-  // Fall back to 16/9 before any image is loaded.
-  const canvasRatio = imageAspectRatio ?? (16 / 9)
+  const canvasRatio = webcamActive ? (webcamAspectRatio ?? (4 / 3)) : (imageAspectRatio ?? (16 / 9))
 
   return (
     <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: '#0d0c0b' }}>
@@ -39,8 +42,15 @@ export default function App() {
           <div style={{ padding: '12px 20px', borderBottom: '1px solid rgba(255,255,255,0.06)', flexShrink: 0 }}>
             {imageSrc
               ? <SourceImage src={imageSrc} onReset={reset} />
+              : webcamActive
+              ? <WebcamSource onReset={reset} />
               : <ImageUploader compact />
             }
+            {!imageSrc && !webcamActive && (
+              <div style={{ marginTop: 10 }}>
+                <WebcamToggle />
+              </div>
+            )}
           </div>
 
           <div style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
@@ -75,8 +85,26 @@ export default function App() {
         }}>
           <CanvasRenderer />
 
+          {/* Webcam freeze button */}
+          {webcamActive && (
+            <button
+              onClick={() => setWebcamFrozen(!webcamFrozen)}
+              style={{
+                position: 'absolute', top: 12, right: 12, zIndex: 5,
+                background: webcamFrozen ? 'rgba(240,237,232,0.12)' : 'rgba(255,255,255,0.06)',
+                border: `1px solid ${webcamFrozen ? 'rgba(240,237,232,0.3)' : 'rgba(255,255,255,0.12)'}`,
+                borderRadius: 7, color: webcamFrozen ? '#f0ede8' : '#9a9590',
+                fontSize: 12, fontWeight: 500, fontFamily: 'inherit',
+                padding: '7px 14px', cursor: 'pointer',
+                transition: 'all 0.15s',
+              }}
+            >
+              {webcamFrozen ? 'Resume' : 'Freeze'}
+            </button>
+          )}
+
           {/* Upload overlay */}
-          {!imageSrc && (
+          {!imageSrc && !webcamActive && (
             <div style={{
               position: 'absolute', inset: 0,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -100,12 +128,15 @@ export default function App() {
                 <div style={{ marginTop: isMobile ? 12 : 0 }}>
                   <ImageUploader />
                 </div>
+                <div style={{ marginTop: 12 }}>
+                  <WebcamToggle />
+                </div>
               </div>
             </div>
           )}
 
           {/* Interaction hint */}
-          {imageSrc && (
+          {(imageSrc || webcamActive) && (
             <div style={{
               position: 'absolute', bottom: 10, right: 14,
               color: '#2a2825', fontSize: 10, pointerEvents: 'none',
@@ -207,6 +238,11 @@ export default function App() {
                 <SourceImage src={imageSrc} onReset={() => { reset(); setSheetOpen(false) }} />
               </div>
             )}
+            {webcamActive && (
+              <div style={{ padding: '10px 20px', borderBottom: '1px solid rgba(255,255,255,0.06)', flexShrink: 0 }}>
+                <WebcamSource onReset={() => { reset(); setSheetOpen(false) }} />
+              </div>
+            )}
 
             <div style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
               <Controls />
@@ -258,6 +294,42 @@ function Copyright() {
       >
         LinkedIn ↗
       </a>
+    </div>
+  )
+}
+
+function WebcamSource({ onReset }) {
+  const webcamFrozen = useEngineStore((s) => s.webcamFrozen)
+  const setWebcamFrozen = useEngineStore((s) => s.setWebcamFrozen)
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+      <div style={{
+        width: 48, height: 34, borderRadius: 4, flexShrink: 0,
+        border: '1px solid rgba(255,255,255,0.1)',
+        background: 'rgba(255,255,255,0.04)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        color: '#57524d', fontSize: 18,
+      }}>
+        ◉
+      </div>
+      <div>
+        <div style={{ color: '#57524d', fontSize: 10, marginBottom: 4 }}>Live webcam</div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button onClick={() => setWebcamFrozen(!webcamFrozen)} style={{
+            background: 'none', border: 'none', padding: 0,
+            color: '#9a9590', fontSize: 11, cursor: 'pointer',
+            fontFamily: 'inherit', textDecoration: 'underline', textUnderlineOffset: 2,
+          }}>
+            {webcamFrozen ? 'Resume' : 'Freeze'}
+          </button>
+          <span style={{ color: '#3d3a35', fontSize: 11 }}>·</span>
+          <button onClick={onReset} style={{
+            background: 'none', border: 'none', padding: 0,
+            color: '#9a9590', fontSize: 11, cursor: 'pointer',
+            fontFamily: 'inherit', textDecoration: 'underline', textUnderlineOffset: 2,
+          }}>Stop</button>
+        </div>
+      </div>
     </div>
   )
 }

@@ -105,7 +105,7 @@ export default function Controls() {
         lo="Snappy" hi="Fluid"
         value={friction} min={0.7} max={0.99} step={0.01} onChange={setFriction} />
 
-      <SectionLabel>Image</SectionLabel>
+      <SectionLabel>Source</SectionLabel>
 
       <Slider label="Detail" hint="More particles = sharper, denser image"
         lo="Abstract" hi="Sharp"
@@ -116,9 +116,10 @@ export default function Controls() {
       <Chips label="Colors"
         value={colorPalette} onChange={setColorPalette}
         options={[
-          { value: 'teal',    label: 'Teal'   },
-          { value: 'matrix',  label: 'Matrix' },
-          { value: 'sampled', label: 'Photo'  },
+          { value: 'teal',     label: 'Teal'     },
+          { value: 'lavender', label: 'Lavender' },
+          { value: 'matrix',   label: 'Matrix'   },
+          { value: 'sampled',  label: 'Photo'    },
         ]}
       />
 
